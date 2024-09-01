@@ -341,6 +341,8 @@ export abstract class Client extends GameShell {
     protected activeMapFunctionX: Int32Array = new Int32Array(1000);
     protected activeMapFunctionZ: Int32Array = new Int32Array(1000);
     protected bankall: boolean = localStorage.getItem('bankall') == 'true' || false;
+    protected grabdelay: number = parseInt(localStorage.getItem('grabdelay') || '10');
+    protected grabdist: number = parseInt(localStorage.getItem('grabdist') || '10');
 
     // scene
     protected scene: World3D | null = null;
@@ -1115,16 +1117,16 @@ export abstract class Client extends GameShell {
                                 if (this.objDragArea !== 0 && this.objDragSlot === slot && this.objDragInterfaceId === child.id) {
                                     dx = this.mouseX - this.objGrabX;
                                     dy = this.mouseY - this.objGrabY;
-
-                                    if (dx < 5 && dx > -5) {
+                                    const dist = this.grabdist;
+                                    if (dx < dist && dx > -dist) {
                                         dx = 0;
                                     }
 
-                                    if (dy < 5 && dy > -5) {
+                                    if (dy < dist && dy > -dist) {
                                         dy = 0;
                                     }
 
-                                    if (this.objDragCycles < 5) {
+                                    if (this.objDragCycles < this.grabdelay) {
                                         dx = 0;
                                         dy = 0;
                                     }

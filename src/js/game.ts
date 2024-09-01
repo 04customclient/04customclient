@@ -1201,7 +1201,8 @@ class Game extends Client {
 
             if (this.objDragArea !== 0) {
                 this.objDragCycles++;
-                if (this.mouseX > this.objGrabX + 5 || this.mouseX < this.objGrabX - 5 || this.mouseY > this.objGrabY + 5 || this.mouseY < this.objGrabY - 5) {
+                const dist = this.grabdist;
+                if (this.mouseX > this.objGrabX + dist || this.mouseX < this.objGrabX - dist || this.mouseY > this.objGrabY + dist || this.mouseY < this.objGrabY - dist) {
                     this.objGrabThreshold = true;
                 }
 
@@ -1214,7 +1215,7 @@ class Game extends Client {
                     }
 
                     this.objDragArea = 0;
-                    if (this.objGrabThreshold && this.objDragCycles >= 5) {
+                    if (this.objGrabThreshold && this.objDragCycles >= this.grabdelay) {
                         this.hoveredSlotParentId = -1;
                         this.handleInput();
                         if (this.hoveredSlotParentId === this.objDragInterfaceId && this.hoveredSlot !== this.objDragSlot) {
@@ -4296,6 +4297,14 @@ class Game extends Client {
                                 if (+Client.getParameter('world') === 999) {
                                     this.exchangeSDP();
                                 }
+                            } else if (this.chatTyped.startsWith('::grabdelay ')) {
+                                const delay = parseInt(this.chatTyped.substring(12), 10);
+                                this.grabdelay = isNaN(delay) ? 10 : delay;
+                                localStorage.setItem('grabdelay', String(this.grabdelay));
+                            } else if (this.chatTyped.startsWith('::grabdist ')) {
+                                const dist = parseInt(this.chatTyped.substring(11), 10);
+                                this.grabdist = isNaN(dist) ? 10 : dist;
+                                localStorage.setItem('grabdist', String(this.grabdist));
                             } else if (this.chatTyped.startsWith('::fps ')) {
                                 try {
                                     this.setTargetedFramerate(parseInt(this.chatTyped.substring(6), 10));
