@@ -8863,6 +8863,10 @@ class Game extends Client {
         if (this.orbitCameraZ !== orbitZ) {
             this.orbitCameraZ += ((orbitZ - this.orbitCameraZ) / 16) | 0;
         }
+        if (this.mouseDragging) {
+            this.orbitCameraYawVelocity -= this.mouseMoveX * 5;
+            this.orbitCameraPitchVelocity += this.mouseMoveY * 5;
+        }
         if (this.actionKey[1] === 1) {
             this.orbitCameraYawVelocity += ((-this.orbitCameraYawVelocity - 24) / 2) | 0;
         } else if (this.actionKey[2] === 1) {

@@ -44,6 +44,9 @@ export default abstract class GameShell {
     protected mouseClickButton: number = 0;
     protected mouseClickX: number = 0;
     protected mouseClickY: number = 0;
+    protected mouseMoveX: number = 0;
+    protected mouseMoveY: number = 0;
+    protected mouseDragging: boolean = false;
     protected actionKey: number[] = [];
     protected keyQueue: number[] = [];
     protected keyQueueReadPos: number = 0;
@@ -109,9 +112,11 @@ export default abstract class GameShell {
         // pc
         canvas.onmousedown = this.onmousedown;
         canvas.onmouseup = this.onmouseup;
+        window.onmouseup = this.window_onmouseup;
         canvas.onmouseenter = this.onmouseenter;
         canvas.onmouseleave = this.onmouseleave;
         canvas.onmousemove = this.onmousemove;
+        window.onmousemove = this.window_onmousemove;
         window.onbeforeunload = this.unload;
         canvas.onfocus = this.onfocus;
         canvas.onblur = this.onblur;
@@ -205,6 +210,8 @@ export default abstract class GameShell {
             while (count < 256) {
                 await this.update();
                 this.mouseClickButton = 0;
+                this.mouseMoveX = 0;
+                this.mouseMoveY = 0;
                 this.keyQueueReadPos = this.keyQueueWritePos;
                 count += ratio;
             }
@@ -486,6 +493,10 @@ export default abstract class GameShell {
         if (e.clientX > 0 || e.clientY > 0) this.setMousePosition(e);
 
         this.idleCycles = Date.now();
+        if (e.button === 1) {
+            this.mouseDragging = true;
+            return;
+        }
         this.mouseClickX = this.mouseX;
         this.mouseClickY = this.mouseY;
 
@@ -524,9 +535,17 @@ export default abstract class GameShell {
         this.idleCycles = Date.now();
         this.mouseButton = 0;
 
+        if (e.button === 1) {
+            this.mouseDragging = false;
+            return;
+        }
         if (InputTracking.enabled) {
             InputTracking.mouseReleased(e.buttons);
         }
+    };
+
+    private window_onmouseup = (e: MouseEvent): void => {
+        if (e.button === 1) this.mouseDragging = false;
     };
 
     private onmouseenter = (e: MouseEvent): void => {
@@ -562,6 +581,11 @@ export default abstract class GameShell {
         if (InputTracking.enabled) {
             InputTracking.mouseMoved(this.mouseX, this.mouseY);
         }
+    };
+
+    private window_onmousemove = (e: MouseEvent): void => {
+        this.mouseMoveX += e.movementX;
+        this.mouseMoveY += e.movementY;
     };
 
     private onfocus = (e: FocusEvent): void => {
