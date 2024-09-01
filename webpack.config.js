@@ -9,7 +9,11 @@ const TerserPlugin = require('terser-webpack-plugin');
 const isProduction = process.env.NODE_ENV === 'production';
 const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader';
 
-const pages = ['index', 'playground', 'viewer', 'mesanim', 'items', 'sounds', 'interface-editor', 'JagEd', 'mapview'];
+const pages = [
+    'index',
+    // 'playground', 'viewer', 'mesanim', 'items', 'sounds',
+    // 'interface-editor', 'JagEd', 'mapview'
+];
 const htmlPlugins = pages.map(name => {
     return new HtmlWebpackPlugin({
         template: `src/html/${name}.html`,
@@ -21,14 +25,14 @@ const htmlPlugins = pages.map(name => {
 const config = {
     entry: {
         index: './src/js/game.ts',
-        playground: './src/js/playground.js',
-        viewer: './src/js/viewer.ts',
-        mesanim: './src/js/mesanim.ts',
-        items: './src/js/items.ts',
-        sounds: './src/js/sounds.ts',
-        ['interface-editor']: './src/js/interface-editor.ts',
-        JagEd: './src/js/JagEd.ts',
-        mapview: './src/js/mapview.ts'
+        // playground: './src/js/playground.js',
+        // viewer: './src/js/viewer.ts',
+        // mesanim: './src/js/mesanim.ts',
+        // items: './src/js/items.ts',
+        // sounds: './src/js/sounds.ts',
+        // ['interface-editor']: './src/js/interface-editor.ts',
+        // JagEd: './src/js/JagEd.ts',
+        // mapview: './src/js/mapview.ts'
     },
 
     plugins: [

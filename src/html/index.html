@@ -1,26 +1,23 @@
 <html>
 <head>
-    <title>RuneScape 2</title>
-
+    <title>2004Scape</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <meta name="viewport" content="width=device-width, initial-scale = 0.86, maximum-scale=3.0, minimum-scale=0.86">
-
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-
     <style>
         body {
             margin: 0;
             padding: 0;
             color: #fff;
             background-color: #000;
+            font-size: 12px;
+            font-family: Arial, Helvetica, sans-serif;
         }
-
         canvas {
             display: block;
             margin: 0 auto;
-
             touch-action: none;
             -webkit-touch-callout: none;
             -webkit-user-select: none;
@@ -32,9 +29,84 @@
             -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
             z-index: -1;
         }
+        html:-webkit-full-screen {
+            background-color: black !important;
+        }
+        .centered {
+            text-align: center;
+        }
+        .green {
+            text-decoration: none;
+            color: #04A800;
+        }
+        #controls {
+            margin-bottom: 10px;
+        }
     </style>
+    <script>
+        function toggleFullscreen() {
+            if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            } else {
+                let element = document.getElementById('canvas');
+                if (element.requestFullscreen) {
+                    element.requestFullscreen();
+                } else if (element.webkitRequestFullscreen) {
+                    element.webkitRequestFullscreen();
+                } else if (element.mozRequestFullScreen) {
+                    element.mozRequestFullScreen();
+                } else if (element.msRequestFullscreen) {
+                    element.msRequestFullscreen();
+                }
+            }
+        }
+        function toggleFiltering() {
+            let canvas = document.getElementById('canvas');
+            let filtering = canvas.style.imageRendering == 'pixelated';
+            canvas.style.imageRendering = filtering ? 'auto' : 'pixelated';
+            let element = document.getElementById('filtering');
+            element.textContent = filtering ? "Auto scaling" : "Pixel scaling";
+        }
+        let canvasSize = 1;
+        let maxCanvasSize = 3;
+        function changeCanvasSize() {
+            canvasSize += 1;
+            if (canvasSize > maxCanvasSize) {
+                canvasSize = 1;
+            }
+            canvas.style.width = (789 * canvasSize) + 'px';
+            canvas.style.height = (532 * canvasSize) + 'px';
+            
+            let element = document.getElementById('canvasSize');
+            element.textContent = canvasSize + "x size";
+        }
+        function saveScreenshot() {
+            document.getElementById('screenshot').download = 'screenshot-' + Math.floor(Date.now() / 1000) + '.png';
+            document.getElementById('screenshot').href = document.getElementById('canvas').toDataURL('image/png').replace(/^data:image\/[^;]/, 'data:application/octet-stream');
+        }
+        function hideControls() {
+            document.getElementById('controls').style.display = 'none';
+        }
+    </script>
 </head>
 <body>
-<canvas id="canvas" width="789" height="532"></canvas>
+    <center>
+        <canvas id="canvas" width="789" height="532" style="image-rendering: auto;"></canvas>
+        <div class="centered" id="controls">
+            <a class="green" href="#" id="fullscreen" onclick="toggleFullscreen();">Go fullscreen</a> |
+            <a class="green" href="#" id="filtering" onclick="toggleFiltering();">Auto scaling</a> |
+            <a class="green" href="#" id="canvasSize" onclick="changeCanvasSize();">1x size</a> |
+            <a class="green" href="#" id="screenshot" onclick="saveScreenshot();">Take screenshot</a> |
+            <a class="green" href="#" id="hide" onclick="hideControls();">Hide controls</a>
+        </div>
+    </center>
 </body>
 </html>

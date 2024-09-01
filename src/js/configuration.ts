@@ -31,9 +31,9 @@ async function world(): Promise<void> {
 
 // setup the detail
 function detail(): void {
-    if (GameShell.getParameter('detail').length === 0) {
-        GameShell.setParameter('detail', 'high');
-    }
+    // if (GameShell.getParameter('detail').length === 0) {
+    //     GameShell.setParameter('detail', 'high');
+    // }
     if (GameShell.getParameter('detail') === 'low') {
         Client.setLowMemory();
     } else {
@@ -43,9 +43,9 @@ function detail(): void {
 
 // setup the method
 function method(): void {
-    if (GameShell.getParameter('method').length === 0) {
-        GameShell.setParameter('method', '0');
-    }
+    // if (GameShell.getParameter('method').length === 0) {
+    //     GameShell.setParameter('method', '0');
+    // }
 }
 
 // ---
@@ -57,15 +57,26 @@ function localConfiguration(): void {
     }
 
     Client.serverAddress = 'http://localhost';
-    Client.httpAddress = 'http://localhost';
+    Client.httpAddress = 'http://localhost:3000';
     Client.portOffset = 0;
 }
 
 async function liveConfiguration(secured: boolean): Promise<void> {
-    const world: WorldList = await getWorldInfo(secured, parseInt(GameShell.getParameter('world'), 10));
+    // const world: WorldList = await getWorldInfo(secured, parseInt(GameShell.getParameter('world'), 10));
+    const id = parseInt(GameShell.getParameter('world'));
+    const port = 9000 + id;
+    const world: WorldList = {
+        id,
+        region: 'REGION',
+        address: `http://localhost:${port}`,
+        portOffset: port,
+        players: 0,
+        members: false
+    };
     const url: URL = new URL(world.address);
 
-    Client.nodeId = 10 + world.id - 1;
+    Client.nodeId = 10 + id - 1;
+    Client.modulus = BigInt(await ((await fetch("clientkey_" + id)).text()));
     // this way so we dont keep the port if address has one
     Client.serverAddress = `${url.protocol}//${url.hostname}`;
     Client.httpAddress = `${url.protocol}//${url.hostname}:${url.port}`;
@@ -75,7 +86,7 @@ async function liveConfiguration(secured: boolean): Promise<void> {
     }
     Client.portOffset = world.portOffset;
     Client.members = world?.members === true;
-    GameShell.setParameter('world', world.id.toString(10));
+    // GameShell.setParameter('world', world.id.toString(10));
 }
 
 async function getWorldInfo(secured: boolean, id: number, retries: number = 0): Promise<WorldList> {
@@ -86,7 +97,7 @@ async function getWorldInfo(secured: boolean, id: number, retries: number = 0): 
     const protocol: string = secured ? 'https:' : 'http:';
     let worldlist: WorldList[];
     try {
-        worldlist = JSON.parse(await downloadText(`${protocol}//2004scape.org/api/v1/worldlist`));
+        worldlist = JSON.parse(await downloadText(`${protocol}//localhost:5000/api/v1/worldlist`));
     } catch (e) {
         await sleep(1000);
         return getWorldInfo(secured, id, ++retries);
@@ -94,7 +105,7 @@ async function getWorldInfo(secured: boolean, id: number, retries: number = 0): 
     worldlist.push({
         id: 0,
         region: 'Local Development',
-        address: 'http://localhost',
+        address: 'http://localhost:3000',
         portOffset: 0,
         members: true,
         players: 0

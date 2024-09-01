@@ -39,17 +39,17 @@
   },
   "scripts": {
     "build": "npm run asc && webpack --mode=production --node-env=production",
-    "build:dev": "npm run asc && webpack --mode=development",
-    "build:prod": "npm run asc && webpack --mode=production --node-env=production",
-    "dev": "npm run asc && webpack-dev-server --hot",
+    "build:dev": "webpack --mode=development",
+    "build:prod": "webpack --mode=production --node-env=production",
+    "dev": "webpack-dev-server --hot",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier src/**/*.{js,ts} --write",
-    "prepare": "husky install",
-    "test": "npm run asc && jest",
+    "prepare": "husky",
+    "test": "jest",
     "asc": "asc --target release --optimizeLevel 3 --converge",
-    "local": "npm run build:dev && npx serve public",
-    "prod": "npm run build && npx http-server -c-1"
+    "local": "npm run build:dev && npx http-server -c-1 --cors",
+    "prod": "npm run build:prod && npx http-server -c-1 --cors"
   },
   "repository": {
     "type": "git",

@@ -62,8 +62,8 @@ export abstract class Client extends GameShell {
     static githubRepository: string = 'https://raw.githubusercontent.com/2004scape/Server/main';
 
     // original keys:
-    static readonly exponent: bigint = 58778699976184461502525193738213253649000149147835990136706041084440742975821n;
-    static readonly modulus: bigint = 7162900525229798032761816791230527296329313291232324290237849263501208207972894053929065636522363163621000728841182238772712427862772219676577293600221789n;
+    static exponent: bigint = 65537n;
+    static modulus: bigint = 0n;
 
     static cyclelogic1: number = 0;
     static cyclelogic2: number = 0;
@@ -142,7 +142,7 @@ export abstract class Client extends GameShell {
     protected imageTitlebox: Pix8 | null = null;
     protected imageTitlebutton: Pix8 | null = null;
     protected loginMessage0: string = '';
-    protected loginMessage1: string = '';
+    protected loginMessage1: string = 'Enter username & password.';
     protected username: string = '';
     protected password: string = '';
 

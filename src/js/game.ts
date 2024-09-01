@@ -863,7 +863,7 @@ class Game extends Client {
                 this.stream = new ClientStream(
                     await ClientStream.openSocket({
                         host: Client.serverAddress,
-                        port: 43594 + Client.portOffset
+                        port: Client.portOffset
                     })
                 );
             }

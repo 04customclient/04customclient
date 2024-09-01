@@ -1,3 +1,20 @@
+# Custom client instructions (Linux)
+
+Requirements: `npm` `mitmproxy`
+
+1. `git clone https://github.com/04customclient/04customclient --branch dev`
+2. `setup.sh`
+3. `run.sh`
+4. Play at http://localhost:8080/?world=1
+5. Press Ctrl+C to stop
+
+Whenever the real client updates (you'll see a message when loading the game), run `setup.sh` again to fetch the new keys.
+
+<br><br><br>
+
+Original readme:
+___
+
 <div align="center">
 
 <h1>2004Scape Client2 - May 18, 2004</h1>

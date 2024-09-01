@@ -22,8 +22,8 @@ export default class ClientStream {
             const secured: boolean = socket.host.startsWith('https');
             const protocol: string = secured ? 'wss' : 'ws';
             const host: string = socket.host.substring(socket.host.indexOf('//') + 2);
-            const port: number = secured ? socket.port + 2 : socket.port + 1;
-            const ws: WebSocket = new WebSocket(`${protocol}://${host}:${port}`, 'binary');
+            // const port: number = secured ? socket.port + 2 : socket.port + 1;
+            const ws: WebSocket = new WebSocket(`${protocol}://${host}:${socket.port}`, 'binary');
 
             ws.addEventListener('open', (): void => {
                 console.log('connection open!');
