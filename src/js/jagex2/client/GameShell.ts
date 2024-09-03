@@ -46,6 +46,7 @@ export default abstract class GameShell {
     protected mouseClickY: number = 0;
     protected mouseMoveX: number = 0;
     protected mouseMoveY: number = 0;
+    protected mouseWheelY: number = 0;
     protected mouseDragging: boolean = false;
     protected actionKey: number[] = [];
     protected keyQueue: number[] = [];
@@ -117,7 +118,8 @@ export default abstract class GameShell {
         canvas.onmouseleave = this.onmouseleave;
         canvas.onmousemove = this.onmousemove;
         window.onmousemove = this.window_onmousemove;
-        window.onbeforeunload = this.unload;
+        window.onbeforeunload = e => e.preventDefault();
+        canvas.onwheel = this.onwheel;
         canvas.onfocus = this.onfocus;
         canvas.onblur = this.onblur;
 
@@ -212,6 +214,7 @@ export default abstract class GameShell {
                 this.mouseClickButton = 0;
                 this.mouseMoveX = 0;
                 this.mouseMoveY = 0;
+                this.mouseWheelY = 0;
                 this.keyQueueReadPos = this.keyQueueWritePos;
                 count += ratio;
             }
@@ -586,6 +589,10 @@ export default abstract class GameShell {
     private window_onmousemove = (e: MouseEvent): void => {
         this.mouseMoveX += e.movementX;
         this.mouseMoveY += e.movementY;
+    };
+
+    private onwheel = (e: WheelEvent): void => {
+        this.mouseWheelY = e.deltaY;
     };
 
     private onfocus = (e: FocusEvent): void => {

@@ -318,7 +318,7 @@ class Game extends Client {
             const distance: Int32Array = new Int32Array(9);
             for (let x: number = 0; x < 9; x++) {
                 const angle: number = x * 32 + 128 + 15;
-                const offset: number = angle * 3 + 600;
+                const offset: number = angle * 3 + this.cameraZoom;
                 const sin: number = Draw3D.sin[angle];
                 distance[x] = (offset * sin) >> 16;
             }
@@ -1284,7 +1284,10 @@ class Game extends Client {
             if (this.mouseButton === 1 || this.mouseClickButton === 1) {
                 this.dragCycles++;
             }
-
+            if (this.mouseWheelY) {
+                const direction: number = Number(this.mouseWheelY > 0) - Number(this.mouseWheelY < 0);
+                this.cameraZoom = Math.max(Math.min(1600, this.cameraZoom + direction * 200), 200);
+            }
             if (this.sceneState === 2) {
                 if (Client.cameraEditor) {
                     this.updateCameraEditor();
@@ -1694,7 +1697,7 @@ class Game extends Client {
 
             const yaw: number = (this.orbitCameraYaw + this.cameraAnticheatAngle) & 0x7ff;
             if (this.localPlayer) {
-                this.orbitCamera(this.orbitCameraX, this.getHeightmapY(this.currentLevel, this.localPlayer.x, this.localPlayer.z) - 50, this.orbitCameraZ, yaw, pitch, pitch * 3 + 600);
+                this.orbitCamera(this.orbitCameraX, this.getHeightmapY(this.currentLevel, this.localPlayer.x, this.localPlayer.z) - 50, this.orbitCameraZ, yaw, pitch, pitch * 3 + this.cameraZoom);
             }
 
             Client.cyclelogic2++;

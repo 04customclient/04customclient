@@ -367,6 +367,7 @@ export abstract class Client extends GameShell {
     protected cameraPitch: number = 0;
     protected cameraYaw: number = 0;
     protected cameraPitchClamp: number = 0;
+    protected cameraZoom: number = 600;
     protected minimapOffsetCycle: number = 0;
     protected minimapAnticheatAngle: number = 0;
     protected minimapZoom: number = 0;
