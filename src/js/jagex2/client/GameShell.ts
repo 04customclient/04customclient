@@ -491,6 +491,9 @@ export default abstract class GameShell {
     };
 
     private onmousedown = (e: MouseEvent): void => {
+        if (e.button > 2) {
+            return;
+        }
         this.touching = false;
         //Don't 'reset' position (This fixes right click in Android)
         if (e.clientX > 0 || e.clientY > 0) this.setMousePosition(e);
