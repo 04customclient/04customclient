@@ -52,6 +52,7 @@ export default abstract class GameShell {
     protected keyQueue: number[] = [];
     protected keyQueueReadPos: number = 0;
     protected keyQueueWritePos: number = 0;
+    protected pressedEnterOnPassword: boolean = false;
 
     // touch controls
     private input: HTMLElement | null = null;
@@ -68,6 +69,7 @@ export default abstract class GameShell {
 
     constructor(resizetoFit: boolean = false) {
         canvas.tabIndex = -1;
+        canvas.focus();
         canvas2d.fillStyle = 'black';
         canvas2d.fillRect(0, 0, canvas.width, canvas.height);
         this.resizeToFit = resizetoFit;

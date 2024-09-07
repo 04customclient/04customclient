@@ -128,7 +128,7 @@ export abstract class Client extends GameShell {
 
     // login screen properties
     protected redrawTitleBackground: boolean = true;
-    protected titleScreenState: number = 0;
+    protected titleScreenState: number = 2;
     protected titleLoginField: number = 0;
     protected imageTitle2: PixMap | null = null;
     protected imageTitle3: PixMap | null = null;
@@ -143,8 +143,8 @@ export abstract class Client extends GameShell {
     protected imageTitlebutton: Pix8 | null = null;
     protected loginMessage0: string = '';
     protected loginMessage1: string = 'Enter username & password.';
-    protected username: string = '';
-    protected password: string = '';
+    protected username: string = localStorage.getItem('username') || '';
+    protected password: string = localStorage.getItem('password') || '';
 
     // fonts
     protected fontPlain11: PixFont | null = null;

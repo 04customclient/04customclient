@@ -663,7 +663,7 @@ class Game extends Client {
             x = ((this.width / 2) | 0) + 80;
             if (this.mouseClickButton === 1 && this.mouseClickX >= x - 75 && this.mouseClickX <= x + 75 && this.mouseClickY >= y - 20 && this.mouseClickY <= y + 20) {
                 this.loginMessage0 = '';
-                this.loginMessage1 = 'Enter your username & password.';
+                this.loginMessage1 = 'Enter username & password.';
                 this.titleScreenState = 2;
                 this.titleLoginField = 0;
             }
@@ -682,19 +682,13 @@ class Game extends Client {
             }
             // y += 15; dead code
 
-            let buttonX: number = ((this.width / 2) | 0) - 80;
+            let buttonX: number = ((this.width / 2) | 0);
             let buttonY: number = ((this.height / 2) | 0) + 50;
             buttonY += 20;
 
-            if (this.mouseClickButton === 1 && this.mouseClickX >= buttonX - 75 && this.mouseClickX <= buttonX + 75 && this.mouseClickY >= buttonY - 20 && this.mouseClickY <= buttonY + 20) {
+            if (this.pressedEnterOnPassword || (this.mouseClickButton === 1 && this.mouseClickX >= buttonX - 75 && this.mouseClickX <= buttonX + 75 && this.mouseClickY >= buttonY - 20 && this.mouseClickY <= buttonY + 20)) {
+                this.pressedEnterOnPassword = false;
                 await this.login(this.username, this.password, false);
-            }
-
-            buttonX = ((this.width / 2) | 0) + 80;
-            if (this.mouseClickButton === 1 && this.mouseClickX >= buttonX - 75 && this.mouseClickX <= buttonX + 75 && this.mouseClickY >= buttonY - 20 && this.mouseClickY <= buttonY + 20) {
-                this.titleScreenState = 0;
-                this.username = '';
-                this.password = '';
             }
 
             // eslint-disable-next-line no-constant-condition
@@ -729,11 +723,16 @@ class Game extends Client {
                         this.username = this.username.substring(0, 12);
                     }
                 } else if (this.titleLoginField === 1) {
+                    if (key === 10 || key === 13) {
+                        this.pressedEnterOnPassword = true;
+                        break;
+                    }
+
                     if (key === 8 && this.password.length > 0) {
                         this.password = this.password.substring(0, this.password.length - 1);
                     }
 
-                    if (key === 9 || key === 10 || key === 13) {
+                    if (key === 9) {
                         this.titleLoginField = 0;
                     }
 
@@ -795,14 +794,10 @@ class Game extends Client {
 
             this.fontBold12?.drawStringTaggable(w / 2 - 88, y, `Password: ${JString.toAsterisks(this.password)}${this.titleLoginField === 1 && this.loopCycle % 40 < 20 ? '@yel@|' : ''}`, Colors.WHITE, true);
 
-            // x = w / 2 - 80; dead code
+            x = w / 2;
             y = ((h / 2) | 0) + 50;
             this.imageTitlebutton?.draw(x - 73, y - 20);
-            this.fontBold12?.drawStringTaggableCenter(x, y + 5, 'Login', Colors.WHITE, true);
-
-            x = ((w / 2) | 0) + 80;
-            this.imageTitlebutton?.draw(x - 73, y - 20);
-            this.fontBold12?.drawStringTaggableCenter(x, y + 5, 'Cancel', Colors.WHITE, true);
+            this.fontBold12?.drawStringTaggableCenter(x, y + 5, 'Play', Colors.WHITE, true);
         } else if (this.titleScreenState === 3) {
             this.fontBold12?.drawStringTaggableCenter(w / 2, h / 2 - 60, 'Create a free account', Colors.YELLOW, true);
 
@@ -910,6 +905,8 @@ class Game extends Client {
             if (reply === 2 || reply === 18) {
                 this.rights = reply === 18;
                 InputTracking.setDisabled();
+                localStorage.setItem('username', this.username);
+                localStorage.setItem('password', this.password);
                 this.ingame = true;
                 this.out.pos = 0;
                 this.in.pos = 0;
@@ -1054,6 +1051,8 @@ class Game extends Client {
                 return;
             }
             if (reply === 15) {
+                localStorage.setItem('username', this.username);
+                localStorage.setItem('password', this.password);
                 this.ingame = true;
                 this.out.pos = 0;
                 this.in.pos = 0;
@@ -4873,9 +4872,8 @@ class Game extends Client {
 
         this.stream = null;
         this.ingame = false;
-        this.titleScreenState = 0;
-        this.username = '';
-        this.password = '';
+        this.titleScreenState = 2;
+        this.loginMessage1 = 'Enter username & password.';
 
         InputTracking.setDisabled();
         this.clearCaches();
