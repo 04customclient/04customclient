@@ -688,8 +688,11 @@ class Game extends Client {
 
             if (this.pressedEnterOnPassword || (this.mouseClickButton === 1 && this.mouseClickX >= buttonX - 75 && this.mouseClickX <= buttonX + 75 && this.mouseClickY >= buttonY - 20 && this.mouseClickY <= buttonY + 20)) {
                 this.pressedEnterOnPassword = false;
+                this.username = this.username.trim();
                 await this.login(this.username, this.password, false);
             }
+
+            const userChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ';
 
             // eslint-disable-next-line no-constant-condition
             while (true) {
@@ -697,14 +700,7 @@ class Game extends Client {
                 if (key === -1) {
                     return;
                 }
-
-                let valid: boolean = false;
-                for (let i: number = 0; i < PixFont.CHARSET.length; i++) {
-                    if (String.fromCharCode(key) === PixFont.CHARSET.charAt(i)) {
-                        valid = true;
-                        break;
-                    }
-                }
+                const char = String.fromCharCode(key);
 
                 if (this.titleLoginField === 0) {
                     if (key === 8 && this.username.length > 0) {
@@ -715,8 +711,19 @@ class Game extends Client {
                         this.titleLoginField = 1;
                     }
 
+                    let valid = false;
+                    for (let i = 0; i < userChars.length; i++) {
+                        if (char === userChars.charAt(i)) {
+                            valid = true;
+                            break;
+                        }
+                    }
+                    if (char === ' ') {
+                        if (this.username.length == 0) valid = false;
+                        if (this.username[this.username.length - 1] === ' ') valid = false;
+                    }
                     if (valid) {
-                        this.username = this.username + String.fromCharCode(key);
+                        this.username = this.username + char;
                     }
 
                     if (this.username.length > 12) {
@@ -736,8 +743,15 @@ class Game extends Client {
                         this.titleLoginField = 0;
                     }
 
+                    let valid = false;
+                    for (let i = 0; i < PixFont.CHARSET.length; i++) {
+                        if (char === PixFont.CHARSET.charAt(i)) {
+                            valid = true;
+                            break;
+                        }
+                    }
                     if (valid) {
-                        this.password = this.password + String.fromCharCode(key);
+                        this.password = this.password + char;
                     }
 
                     if (this.password.length > 20) {
