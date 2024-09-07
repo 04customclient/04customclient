@@ -4288,6 +4288,9 @@ class Game extends Client {
                                 }
                             } else if (this.chatTyped === '::debug') {
                                 Client.showDebug = !Client.showDebug;
+                            } else if (this.chatTyped === '::ba') {
+                                this.bankall = !this.bankall;
+                                localStorage.setItem('bankall', String(this.bankall));
                             } else if (this.chatTyped === '::chat') {
                                 Client.chatEra = (Client.chatEra + 1) % 3;
                             } else if (this.chatTyped === '::peer') {
@@ -6574,6 +6577,38 @@ class Game extends Client {
                                 this.menuParamC[this.menuSize] = child.invSlotObjCount[slot];
                             }
                             this.menuSize++;
+
+                            let shiftIndex = -1;
+                            if (this.bankall) {
+                                for (let i = 0; i < this.menuSize; ++i) {
+                                    const act = this.menuAction[i];
+                                    const opt = this.menuOption[i]
+                                    if (act == 892) shiftIndex = i;
+                                }
+                            }
+                            if (this.actionKey[6]) {
+                                for (let i = 0; i < this.menuSize; ++i) {
+                                    const act = this.menuAction[i];
+                                    const opt = this.menuOption[i]
+                                    if (act == 347 || act == 892) shiftIndex = i;
+                                }
+                            }
+                            if (shiftIndex > -1) {
+                                const primaryIndex = this.menuSize - (1 + Number(this.menuSize > 2));
+                                const pi = primaryIndex, shi = shiftIndex;
+                                const shiftOption = this.menuOption[shi];
+                                const shiftAction = this.menuAction[shi];
+                                this.menuOption[shi] = this.menuOption[pi];
+                                this.menuAction[shi] = this.menuAction[pi];
+                                this.menuParamA[shi] = this.menuParamA[pi];
+                                this.menuParamB[shi] = this.menuParamB[pi];
+                                this.menuParamC[shi] = this.menuParamC[pi];
+                                this.menuOption[pi] = shiftOption;
+                                this.menuAction[pi] = shiftAction;
+                                this.menuParamA[pi] = obj.id;
+                                this.menuParamB[pi] = slot;
+                                this.menuParamC[pi] = child.id;
+                            }
                         }
 
                         slot++;
@@ -6714,6 +6749,21 @@ class Game extends Client {
                                 this.menuSize++;
                             }
                         }
+                        if (this.actionKey[6] || loc.id == 2213) {
+                            const pi = this.menuSize - 1, si = this.menuSize - 2;
+                            const secopt = this.menuOption[si];
+                            const secact = [this.menuAction[si], this.menuParamA[si], this.menuParamB[si], this.menuParamC[si]];
+                            this.menuOption[si] = this.menuOption[pi];
+                            this.menuAction[si] = this.menuAction[pi];
+                            this.menuParamA[si] = this.menuParamA[pi];
+                            this.menuParamB[si] = this.menuParamB[pi];
+                            this.menuParamC[si] = this.menuParamC[pi];
+                            this.menuOption[pi] = secopt;
+                            this.menuAction[pi] = secact[0];
+                            this.menuParamA[pi] = secact[1];
+                            this.menuParamB[pi] = secact[2];
+                            this.menuParamC[pi] = secact[3];
+                        }
                     }
 
                     this.menuOption[this.menuSize] = 'Examine @cya@' + loc.name;
@@ -6734,7 +6784,7 @@ class Game extends Client {
                     this.menuSize++;
                 }
             }
-
+            if (this.actionKey[6]) return;
             if (entityType === 1) {
                 const npc: NpcEntity | null = this.npcs[typeId];
                 if (npc && npc.type && npc.type.size === 1 && (npc.x & 0x7f) === 64 && (npc.z & 0x7f) === 64) {

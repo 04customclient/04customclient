@@ -340,6 +340,7 @@ export abstract class Client extends GameShell {
     protected activeMapFunctionCount: number = 0;
     protected activeMapFunctionX: Int32Array = new Int32Array(1000);
     protected activeMapFunctionZ: Int32Array = new Int32Array(1000);
+    protected bankall: boolean = localStorage.getItem('bankall') == 'true' || false;
 
     // scene
     protected scene: World3D | null = null;
