@@ -52,7 +52,7 @@ export default class World3D {
 
     static topLevel: number = 0;
     private static tilesRemaining: number = 0;
-    private static takingInput: boolean = false;
+    private static mouseButton: number = 0;
 
     private static visibilityMap: boolean[][] | null = null;
 
@@ -105,10 +105,13 @@ export default class World3D {
     );
 
     static activeOccluderCount: number = 0;
+    static menuClick: boolean = false;
     static mouseX: number = 0;
     static mouseY: number = 0;
     static clickTileX: number = -1;
     static clickTileZ: number = -1;
+    static rightClickTileX: number = -1;
+    static rightClickTileZ: number = -1;
     static lowMemory: boolean = true;
 
     static init = (viewportWidth: number, viewportHeight: number, frustumStart: number, frustumEnd: number, pitchDistance: Int32Array): void => {
@@ -980,12 +983,17 @@ export default class World3D {
         }
     };
 
-    click = (mouseX: number, mouseY: number): void => {
-        World3D.takingInput = true;
+    click = (mouseX: number, mouseY: number, mouseButton: number, menuClick: boolean): void => {
+        World3D.mouseButton = mouseButton;
+        World3D.menuClick = menuClick;
         World3D.mouseX = mouseX;
         World3D.mouseY = mouseY;
         World3D.clickTileX = -1;
         World3D.clickTileZ = -1;
+        if (mouseButton == 2) {
+            World3D.rightClickTileX = -1;
+            World3D.rightClickTileZ = -1;
+        }
     };
 
     draw = (eyeX: number, eyeY: number, eyeZ: number, topLevel: number, eyeYaw: number, eyePitch: number, loopCycle: number): void => {
@@ -1108,7 +1116,7 @@ export default class World3D {
                     }
 
                     if (World3D.tilesRemaining === 0) {
-                        World3D.takingInput = false;
+                        World3D.mouseButton = 0;
                         return;
                     }
                 }
@@ -1161,7 +1169,7 @@ export default class World3D {
                     }
 
                     if (World3D.tilesRemaining === 0) {
-                        World3D.takingInput = false;
+                        World3D.mouseButton = 0;
                         return;
                     }
                 }
@@ -2015,9 +2023,14 @@ export default class World3D {
 
         if ((py1 - px3) * (px1 - py3) - (pz1 - py3) * (pz0 - px3) > 0) {
             Draw3D.clipX = py1 < 0 || px3 < 0 || pz0 < 0 || py1 > Draw2D.boundX || px3 > Draw2D.boundX || pz0 > Draw2D.boundX;
-            if (World3D.takingInput && this.pointInsideTriangle(World3D.mouseX, World3D.mouseY, pz1, py3, px1, py1, px3, pz0)) {
-                World3D.clickTileX = tileX;
-                World3D.clickTileZ = tileZ;
+            if (World3D.mouseButton && this.pointInsideTriangle(World3D.mouseX, World3D.mouseY, pz1, py3, px1, py1, px3, pz0)) {
+                if (World3D.mouseButton == 1) {
+                    World3D.clickTileX = tileX;
+                    World3D.clickTileZ = tileZ;
+                } else {
+                    World3D.rightClickTileX = tileX;
+                    World3D.rightClickTileZ = tileZ;
+                }
             }
             if (underlay.textureId === -1) {
                 if (underlay.northeastColor !== 12345678) {
@@ -2036,9 +2049,14 @@ export default class World3D {
             return;
         }
         Draw3D.clipX = px0 < 0 || pz0 < 0 || px3 < 0 || px0 > Draw2D.boundX || pz0 > Draw2D.boundX || px3 > Draw2D.boundX;
-        if (World3D.takingInput && this.pointInsideTriangle(World3D.mouseX, World3D.mouseY, py0, px1, py3, px0, pz0, px3)) {
-            World3D.clickTileX = tileX;
-            World3D.clickTileZ = tileZ;
+        if (World3D.mouseButton && this.pointInsideTriangle(World3D.mouseX, World3D.mouseY, py0, px1, py3, px0, pz0, px3)) {
+            if (World3D.mouseButton == 1) {
+                World3D.clickTileX = tileX;
+                World3D.clickTileZ = tileZ;
+            } else {
+                World3D.rightClickTileX = tileX;
+                World3D.rightClickTileZ = tileZ;
+            }
         }
         if (underlay.textureId !== -1) {
             if (!World3D.lowMemory) {
@@ -2098,9 +2116,14 @@ export default class World3D {
 
             if ((x0 - x1) * (y2 - y1) - (y0 - y1) * (x2 - x1) > 0) {
                 Draw3D.clipX = x0 < 0 || x1 < 0 || x2 < 0 || x0 > Draw2D.boundX || x1 > Draw2D.boundX || x2 > Draw2D.boundX;
-                if (World3D.takingInput && this.pointInsideTriangle(World3D.mouseX, World3D.mouseY, y0, y1, y2, x0, x1, x2)) {
-                    World3D.clickTileX = tileX;
-                    World3D.clickTileZ = tileZ;
+                if (World3D.mouseButton && this.pointInsideTriangle(World3D.mouseX, World3D.mouseY, y0, y1, y2, x0, x1, x2)) {
+                    if (World3D.mouseButton == 1) {
+                        World3D.clickTileX = tileX;
+                        World3D.clickTileZ = tileZ;
+                    } else {
+                        World3D.rightClickTileX = tileX;
+                        World3D.rightClickTileZ = tileZ;
+                    }
                 }
                 if (!overlay.triangleTextureIds || overlay.triangleTextureIds[v] === -1) {
                     if (overlay.triangleColorA[v] !== 12345678) {

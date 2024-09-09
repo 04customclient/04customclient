@@ -1256,10 +1256,11 @@ class Game extends Client {
 
             if (World3D.clickTileX !== -1) {
                 if (this.localPlayer) {
-                    const x: number = World3D.clickTileX;
-                    const z: number = World3D.clickTileZ;
+                    const x: number = World3D.menuClick ? World3D.rightClickTileX : World3D.clickTileX;
+                    const z: number = World3D.menuClick ? World3D.rightClickTileZ : World3D.clickTileZ;
                     const success: boolean = this.tryMove(this.localPlayer.pathTileX[0], this.localPlayer.pathTileZ[0], x, z, 0, 0, 0, 0, 0, 0, true);
                     World3D.clickTileX = -1;
+                    World3D.menuClick = false;
 
                     if (success) {
                         this.crossX = this.mouseClickX;
@@ -3462,9 +3463,9 @@ class Game extends Client {
             }
         } else if (action === 660) {
             if (this.menuVisible) {
-                this.scene?.click(b - 8, c - 11);
+                this.scene?.click(b - 8, c - 11, 1, true);
             } else {
-                this.scene?.click(this.mouseClickX - 8, this.mouseClickY - 11);
+                this.scene?.click(this.mouseClickX - 8, this.mouseClickY - 11, 1, false);
             }
         } else if (action === 188) {
             // select obj interface
@@ -7225,6 +7226,7 @@ class Game extends Client {
             this.menuY = y;
             this.menuWidth = width;
             this.menuHeight = this.menuSize * 15 + 22;
+            this.scene?.click(this.mouseClickX - 8, this.mouseClickY - 11, 2, false);
         }
 
         // the sidebar/tabs area
