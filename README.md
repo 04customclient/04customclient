@@ -10,7 +10,21 @@ Requirements: `npm` `mitmproxy`
 
 Whenever the real client updates (you'll see a message when loading the game), run `setup.sh` again to fetch the new keys.
 
-<br><br><br>
+#### Features
+- mouse wheel camera
+- mouse wheel camera zoom
+- remove last logged in popup
+- simpler login screen, remember username/password
+- add warning when clicking mouse3/4
+- 1-click to open bank
+- shift-click to Drop/Buy 10/Bank All/Withdraw All
+- `::ba` command to toggle Bank All/Withdraw All without having to shift
+- shift-click to walk under NPCs and items
+- allow delayed 'Walk here' right clicks
+- tile markers (`Alt + Shift + Click`)
+- custom item switching delay and distance thresholds (`::grabdelay 10`, `::grabdist 10`)
+
+<br>
 
 Original readme:
 ___
