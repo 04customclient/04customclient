@@ -5470,26 +5470,27 @@ class Game extends Client {
             }
             if (this.packetType === ServerProt.LAST_LOGIN_INFO) {
                 // LAST_LOGIN_INFO
-                this.lastAddress = this.in.g4;
-                this.daysSinceLastLogin = this.in.g2;
-                this.daysSinceRecoveriesChanged = this.in.g1;
-                this.unreadMessages = this.in.g2;
-                if (this.lastAddress !== 0 && this.viewportInterfaceId === -1) {
-                    // signlink.dnslookup(JString.formatIPv4(this.lastAddress)); // TODO?
-                    this.closeInterfaces();
-                    let contentType: number = 650;
-                    if (this.daysSinceRecoveriesChanged !== 201) {
-                        contentType = 655;
-                    }
-                    this.reportAbuseInput = '';
-                    this.reportAbuseMuteOption = false;
-                    for (let i: number = 0; i < Component.instances.length; i++) {
-                        if (Component.instances[i] && Component.instances[i].clientCode === contentType) {
-                            this.viewportInterfaceId = Component.instances[i].layer;
-                            break;
-                        }
-                    }
-                }
+                this.in.g4; this.in.g2; this.in.g1; this.in.g2;
+                // this.lastAddress = this.in.g4;
+                // this.daysSinceLastLogin = this.in.g2;
+                // this.daysSinceRecoveriesChanged = this.in.g1;
+                // this.unreadMessages = this.in.g2;
+                // if (this.lastAddress !== 0 && this.viewportInterfaceId === -1) {
+                //     // signlink.dnslookup(JString.formatIPv4(this.lastAddress)); // TODO?
+                //     this.closeInterfaces();
+                //     let contentType: number = 650;
+                //     if (this.daysSinceRecoveriesChanged !== 201) {
+                //         contentType = 655;
+                //     }
+                //     this.reportAbuseInput = '';
+                //     this.reportAbuseMuteOption = false;
+                //     for (let i: number = 0; i < Component.instances.length; i++) {
+                //         if (Component.instances[i] && Component.instances[i].clientCode === contentType) {
+                //             this.viewportInterfaceId = Component.instances[i].layer;
+                //             break;
+                //         }
+                //     }
+                // }
                 this.packetType = -1;
                 return true;
             }
