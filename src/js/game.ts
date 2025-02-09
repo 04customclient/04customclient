@@ -2061,15 +2061,13 @@ class Game extends Client {
             }
         }
 
-        if (Client.showDebug) {
-            for (let i: number = 0; i < this.userTileMarkers.length; i++) {
-                const marker: Tile | null = this.userTileMarkers[i];
-                if (!marker || marker.level !== this.currentLevel || marker.x < 0 || marker.z < 0 || marker.x >= 104 || marker.z >= 104) {
-                    continue;
-                }
-
-                this.debugDrawTileOverlay(marker.x * 128 + 64, marker.z * 128 + 64, marker.level, 1, 0xffff00, false);
+        for (let i: number = 0; i < this.userTileMarkers.length; i++) {
+            const marker: Tile | null = this.userTileMarkers[i];
+            if (!marker || marker.level !== this.currentLevel || marker.x < 0 || marker.z < 0 || marker.x >= 104 || marker.z >= 104) {
+                continue;
             }
+
+            this.debugDrawTileOverlay(marker.x * 128 + 64, marker.z * 128 + 64, marker.level, 1, 0xffff00, false);
         }
 
         for (let i: number = 0; i < this.chatCount; i++) {
@@ -7506,7 +7504,7 @@ class Game extends Client {
             const startX: number = this.bfsStepX[length];
             const startZ: number = this.bfsStepZ[length];
 
-            if (Client.showDebug && this.actionKey[6] === 1 && this.actionKey[7] === 1) {
+            if (this.actionKey[6] === 1 && this.actionKey[7] === 1) {
                 // check if tile is already added, if so remove it
                 for (let i: number = 0; i < this.userTileMarkers.length; i++) {
                     const marker: Tile | null = this.userTileMarkers[i];
